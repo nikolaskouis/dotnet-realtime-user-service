@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using UserApi.Data;
 using UserApi.Models;
 using Microsoft.EntityFrameworkCore;
+using UserApi.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace UserApi.Controllers;
 
@@ -10,10 +12,12 @@ namespace UserApi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly IHubContext<UserHub> _hubContext;
 
-    public UserController(AppDbContext context)
+    public UserController(AppDbContext context, IHubContext<UserHub> hubContext)
     {
         _context = context;
+        _hubContext = hubContext;
     }
 
     [HttpGet]
@@ -28,6 +32,9 @@ public class UserController : ControllerBase
         user.Id = Guid.NewGuid();
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
+        
+        // the hub that notifies
+        await _hubContext.Clients.All.SendAsync("UserAdded", user);
 
         return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
     }
