@@ -1,78 +1,98 @@
 # Real-Time .NET User Service
 
 This project is built with .NET 8 and demonstrates:
-- A REST API with ASP.NET Core connected to PostgreSQL via EF Core.
-- Real-time updates using SignalR.
-- Testing via Swagger and a live HTML client.
+- REST API development with ASP.NET Core
+- PostgreSQL integration using EF Core
+- Real-time updates via SignalR
+- Asynchronous event processing with RabbitMQ + MassTransit
+- Structured logging with Serilog
+- Dockerized environment with Docker Compose
 
-## Quick Start
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 - [.NET 8 SDK](https://dotnet.microsoft.com/download)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [VS Code](https://code.visualstudio.com/) (with Live Server extension optional)
 
-### Running the Backend
+---
 
-1. **Clone the Repository & Open in VS Code**
+## 🔧 Setup
 
-   ```bash
-   git clone https://github.com/your-name/dotnet-realtime-user-service.git
-   cd dotnet-realtime-user-service/UserApi
-   code .
-   ```
+### 1. Clone the repo & open it
+```bash
+git clone https://github.com/your-name/dotnet-realtime-user-service.git
+cd dotnet-realtime-user-service/UserApi
+code .
+```
 
-2. **Start PostgreSQL via Docker**
+### 2. Run PostgreSQL & RabbitMQ with Docker
+```bash
+docker compose up -d
+```
 
-   From the project root (where `docker-compose.yml` is located), run:
+RabbitMQ UI available at: [http://localhost:15672](http://localhost:15672)  
+Login: `guest` / `guest`
 
-   ```bash
-   docker compose up -d
-   ```
+---
 
-3. **Apply Database Migrations**
+## 🛠️ Development
 
-   In the terminal, run:
+### Run the API
+```bash
+dotnet run
+```
 
-   ```bash
-   dotnet ef database update
-   ```
+Swagger available at: [http://localhost:5077/swagger](http://localhost:5077/swagger)
 
-4. **Run the API**
+### Run from Docker (fully containerized)
+```bash
+docker compose up --build
+```
 
-   Run the project from VS Code or via terminal:
+Swagger will now be at: [http://localhost:5000/swagger](http://localhost:5000/swagger)
 
-   ```bash
-   dotnet run
-   ```
+---
 
-   The app will be available at `http://localhost:5077`.  
-   Open [http://localhost:5077/swagger](http://localhost:5077/swagger) to test API endpoints via Swagger.
+## 💬 Real-time HTML Client (SignalR)
 
-### Live HTML Client with VS Code Live Server
+### Steps:
+1. Open `test.html` in VS Code
+2. Right-click → **Open with Live Server**
+3. Go to [http://127.0.0.1:5500/test.html](http://127.0.0.1:5500/test.html)
+4. POST a user via Swagger → You’ll see real-time updates
 
-1. **Open `test.html` in VS Code**
+---
 
-   The `test.html` file (located in the project root) connects to the SignalR hub for real-time updates.
+## 📨 RabbitMQ + MassTransit
 
-2. **Start Live Server**
+- Every time a user is created, a `UserCreatedEvent` is published.
+- MassTransit consumes this event and processes it in the background.
+- Consumer logs the event to the console.
 
-    - Right-click on `test.html` in VS Code.
-    - Select **"Open with Live Server"**.
-    - This will open the page at a URL like `http://127.0.0.1:5500/test.html`.
+---
 
-3. **Trigger Real-Time Updates**
+## 📊 Logging with Serilog
 
-   Use Swagger to POST a new user:
-   ```json
-   {
-     "username": "nikos",
-     "email": "nikos@example.com"
-   }
-   ```
-   The live HTML client should receive and display the update immediately via SignalR.
+- Logs are structured and output to the console
+- Great for debugging and Docker logging
 
-## Next Steps
+---
 
-- [ ] Implement background processing with RabbitMQ & MassTransit.
-- [ ] Enhance logging and monitoring (Serilog).
+## ✅ Project Structure
+
+```
+UserApi/
+├── Controllers/
+├── Consumers/
+├── Events/
+├── Hubs/
+├── Models/
+├── Data/
+├── Program.cs
+├── test.html
+├── Dockerfile
+├── docker-compose.yml
+```

@@ -1,9 +1,12 @@
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using UserApi.Data;
 using UserApi.Models;
-using Microsoft.EntityFrameworkCore;
+using UserApi.Events;
 using UserApi.Hubs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
+
 
 namespace UserApi.Controllers;
 
@@ -13,11 +16,19 @@ public class UserController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IHubContext<UserHub> _hubContext;
+    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ILogger<UserController> _logger;
 
-    public UserController(AppDbContext context, IHubContext<UserHub> hubContext)
+    public UserController(
+        AppDbContext context, 
+        IHubContext<UserHub> hubContext, 
+        IPublishEndpoint publishEndpoint,
+        ILogger<UserController> logger)
     {
         _context = context;
         _hubContext = hubContext;
+        _publishEndpoint = publishEndpoint;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -36,6 +47,11 @@ public class UserController : ControllerBase
         // the hub that notifies
         await _hubContext.Clients.All.SendAsync("UserAdded", user);
 
+        //publish the event
+        var evt = new UserCreatedEvent(user.Id, user.Username, user.Email);
+        await _publishEndpoint.Publish(evt);
+        
+        _logger.LogInformation("Logger: User created: {@User}", user);
         return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
     }
 }
