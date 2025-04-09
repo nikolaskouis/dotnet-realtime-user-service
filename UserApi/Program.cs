@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using UserApi.Data;
 using UserApi.Hubs;
+using MassTransit;
+using UserApi.Consumers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,28 @@ builder.Services.AddSignalR();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Mass Transit
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<UserCreatedEventConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        //rabbitmq credentials
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ReceiveEndpoint("user-created-queue", e =>
+        {
+            e.ConfigureConsumer<UserCreatedEventConsumer>(context);
+        });
+    });
+});
+
+
 //allow client, mostly for test.html to work
 builder.Services.AddCors(options =>
 {
@@ -27,7 +51,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
-
 
 var app = builder.Build();
 
