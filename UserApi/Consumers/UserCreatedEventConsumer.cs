@@ -9,8 +9,8 @@ public class UserCreatedEventConsumer : IConsumer<UserCreatedEvent>
     {
         var user = context.Message;
         Console.WriteLine($"[RabbitMQ] New user created: {user.Username} ({user.Email})");
-
-        // Here you could trigger emails, logs, downstream APIs, etc.
+            
+        // Emails, logs etc
         return Task.CompletedTask;
     }
 }

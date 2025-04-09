@@ -1,9 +1,12 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using UserApi.Data;
 using UserApi.Hubs;
 using MassTransit;
 using UserApi.Consumers;
 using Serilog;
+using UserApi.DependencyInjection;
 
 //logger
 Log.Logger = new LoggerConfiguration()
@@ -13,6 +16,17 @@ Log.Logger = new LoggerConfiguration()
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+//Even though I am not using Autofac, I added it here
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new AutofacModule());
+});
+
+// If I had an Email Service, it would look like this, to inject it.
+// builder.RegisterType<EmailService>().As<IEmailService>().InstancePerLifetimeScope();
+
 
 builder.Host.UseSerilog();
 // Add services to the container
@@ -24,6 +38,7 @@ builder.Services.AddSignalR();
 // Register DbContext with PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 //Mass Transit
 builder.Services.AddMassTransit(x =>
