@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SignalR Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.5/dist/browser/signalr.min.js"></script>
+</head>
+<body>
+<h1>👥 Users Added:</h1>
+<ul id="userList"></ul>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5077/hubs/user")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.on("UserAdded", (user) => {
+        const li = document.createElement("li");
+        li.textContent = `${user.username} (${user.email})`;
+        document.getElementById("userList").appendChild(li);
+    });
+
+    connection.start().then(() => {
+        console.log("Connected to SignalR hub.");
+    }).catch(err => console.error("SignalR error:", err));
+</script>
+</body>
+</html>

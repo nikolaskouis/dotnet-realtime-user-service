@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2610b0a-af5b-4a76-8338-48067235f00d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/UserApi/Controllers/UserController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserApi/Data/AppDbContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserApi/Models/User.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserApi/docker-compose.yml" afterDir="false" />
+    <list default="true" id="f2610b0a-af5b-4a76-8338-48067235f00d" name="Changes" comment="Setup project. Added docker, migrated, added a basic user controller.&#10;Added gitignore">
+      <change afterPath="$PROJECT_DIR$/UserApi/Hubs/UserHub.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UserApi/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserApi/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserApi/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserApi/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserApi/UserApi.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/UserApi/UserApi.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +41,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/UserApi/Controllers/UserController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserApi/Data/AppDbContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UserApi/Hubs/UserHub.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UserApi/Migrations/20250409081424_InitialCreate.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UserApi/Migrations/AppDbContextModelSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserApi/Models/User.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserApi/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/UserApi/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
@@ -85,8 +91,17 @@
       <option name="presentableId" value="Default" />
       <updated>1744184656515</updated>
       <workItem from="1744184657701" duration="313000" />
-      <workItem from="1744185894078" duration="1712000" />
+      <workItem from="1744185894078" duration="4940000" />
     </task>
+    <task id="LOCAL-00001" summary="Setup project. Added docker, migrated, added a basic user controller.&#10;Added gitignore">
+      <option name="closed" value="true" />
+      <created>1744187843204</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1744187843204</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -96,5 +111,7 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Setup project. Added docker, migrated, added a basic user controller.&#10;Added gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Setup project. Added docker, migrated, added a basic user controller.&#10;Added gitignore" />
   </component>
 </project>
