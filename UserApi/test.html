@@ -20,6 +20,12 @@
         document.getElementById("userList").appendChild(li);
     });
 
+    connection.on("UserFetched", (user) => {
+        const li = document.createElement("li");
+        li.textContent = `Fetched: user with id ${user.id} (${user.username})`;
+        document.getElementById("userList").appendChild(li);
+    });
+
     connection.start().then(() => {
         console.log("Connected to SignalR hub.");
     }).catch(err => console.error("SignalR error:", err));

@@ -31,12 +31,48 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Gets all users
+    /// </summary>
+    /// <returns>List of users</returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
         return Ok(await _context.Users.ToListAsync());
     }
+    
+    /// <summary>
+    /// Get a user by {id}
+    /// </summary>
+    /// <returns>A user</returns>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUserById(Guid id)
+    {
+        //get by id
+        var user = await _context.Users.FindAsync(id);
 
+        if (user == null)
+        {
+            _logger.LogInformation("Logger: User with id {@id}, was not found", user);
+            return NotFound();
+        }
+        
+        // the hub that notifies
+        await _hubContext.Clients.All.SendAsync("UserFetched", user);
+
+        //publish the event
+        var evt = new UserFetchedEvent(user.Id, user.Username, user.Email);
+        await _publishEndpoint.Publish(evt);
+        
+        _logger.LogInformation("Logger: New user created {@User}, on {Time}", user, DateTime.UtcNow);
+
+        return Ok(user);
+    }
+
+    /// <summary>
+    /// Creates users
+    /// </summary>
+    /// <returns>A user</returns>
     [HttpPost]
     public async Task<ActionResult<User>> CreateUser(User user)
     {
@@ -51,7 +87,8 @@ public class UserController : ControllerBase
         var evt = new UserCreatedEvent(user.Id, user.Username, user.Email);
         await _publishEndpoint.Publish(evt);
         
-        _logger.LogInformation("Logger: User created: {@User}", user);
+        _logger.LogInformation("Logger: New user created {@User}, on {Time}", user, DateTime.UtcNow);
+
         return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
     }
 }

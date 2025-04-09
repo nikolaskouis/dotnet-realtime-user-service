@@ -3,6 +3,7 @@ using UserApi.Models;
 
 namespace UserApi.Data;
 
+//Entity framework stuff/postgres
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }

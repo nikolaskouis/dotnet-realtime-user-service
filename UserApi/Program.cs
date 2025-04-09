@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using UserApi.Data;
 using UserApi.Hubs;
 using MassTransit;
+using Microsoft.OpenApi.Models;
 using UserApi.Consumers;
 using Serilog;
 using UserApi.DependencyInjection;
@@ -44,6 +45,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<UserCreatedEventConsumer>();
+    x.AddConsumer<UserFetchedEventConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -58,7 +60,17 @@ builder.Services.AddMassTransit(x =>
         {
             e.ConfigureConsumer<UserCreatedEventConsumer>(context);
         });
+        
+        cfg.ReceiveEndpoint("user-fetched-queue", e =>
+        {
+            e.ConfigureConsumer<UserFetchedEventConsumer>(context);
+        });
     });
+});
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "User API", Version = "v1" });
 });
 
 
