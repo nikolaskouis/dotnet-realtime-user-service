@@ -26,6 +26,19 @@ services:
       - "15672:15672"   # For management UI
     networks:
       - backendnet
+  
+  userapi:
+    build: .
+    container_name: userapi
+    ports:
+      - "5000:80"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Database=userdb;Username=postgres;Password=postgres
+
 
 volumes:
   pgdata:

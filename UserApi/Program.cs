@@ -3,10 +3,18 @@ using UserApi.Data;
 using UserApi.Hubs;
 using MassTransit;
 using UserApi.Consumers;
+using Serilog;
+
+//logger
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog();
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
