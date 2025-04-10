@@ -46,6 +46,8 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<UserCreatedEventConsumer>();
     x.AddConsumer<UserFetchedEventConsumer>();
+    x.AddConsumer<UserDeletedEventConsumer>();
+    x.AddConsumer<UserUpdatedEventConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -64,6 +66,16 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("user-fetched-queue", e =>
         {
             e.ConfigureConsumer<UserFetchedEventConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("user-deleted-queue", e =>
+        {
+            e.ConfigureConsumer<UserDeletedEventConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("user-updated-queue", e =>
+        {
+            e.ConfigureConsumer<UserUpdatedEventConsumer>(context);
         });
     });
 });
