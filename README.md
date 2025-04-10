@@ -124,12 +124,13 @@ Tests are written using \`xUnit\` + \`Moq\`. To run them:
 
 ## 📬 Endpoints Summary
 
-| Method | Route            | Description         |
-|--------|------------------|---------------------|
-| GET    | \`/api/user\`      | Get all users       |
-| GET    | \`/api/user/{id}\` | Get user by ID      |
-| POST   | \`/api/user\`      | Create a new user   |
-| DELETE | \`/api/user/{id}\` | Delete a user       |
+| Method | Route            | Description       |
+|--------|------------------|-------------------|
+| GET    | \`/api/user\`      | Get all users     |
+| GET    | \`/api/user/{id}\` | Get user by ID    |
+| POST   | \`/api/user\`      | Create a new user |
+| DELETE | \`/api/user/{id}\` | Delete a user     |
+| PATCH  | \`/api/user/{id}\` | Update a user     |
 
 ---
 
