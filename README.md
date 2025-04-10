@@ -130,7 +130,7 @@ Tests are written using \`xUnit\` + \`Moq\`. To run them:
 | GET    | \`/api/user/{id}\` | Get user by ID    |
 | POST   | \`/api/user\`      | Create a new user |
 | DELETE | \`/api/user/{id}\` | Delete a user     |
-| UPDATE | \`/api/user/{id}\` | Update a user     |
+| PATCH  | \`/api/user/{id}\` | Update a user     |
 
 ---
 
