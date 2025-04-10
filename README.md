@@ -1,98 +1,139 @@
-# Real-Time .NET User Service
+# 👥 Realtime User Service (.NET 8 + PostgreSQL + RabbitMQ)
 
-This project is built with .NET 8 and demonstrates:
-- REST API development with ASP.NET Core
-- PostgreSQL integration using EF Core
-- Real-time updates via SignalR
-- Asynchronous event processing with RabbitMQ + MassTransit
-- Structured logging with Serilog
-- Dockerized environment with Docker Compose
+This project is a full-featured backend API built using **.NET 8**, designed to manage users in real-time. It demonstrates best practices in modern backend development, including **SignalR for real-time communication**, **MassTransit with RabbitMQ** for message-based architecture, and **EF Core with PostgreSQL** for data storage.
 
 ---
 
-## 🚀 Getting Started
+## ⚙️ Tech Stack
 
-### Prerequisites
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- [VS Code](https://code.visualstudio.com/) (with Live Server extension optional)
+- **ASP.NET Core 8**
+- **Entity Framework Core** with PostgreSQL
+- **SignalR** (WebSockets) for real-time updates
+- **MassTransit** with **RabbitMQ** (event-driven)
+- **Autofac** for Dependency Injection
+- **Serilog** for structured logging
+- **Swagger/OpenAPI** for API documentation
+- **Docker + docker-compose** for containerization
 
 ---
 
-## 🔧 Setup
+## ✨ Features
 
-### 1. Clone the repo & open it
+- ✅ Create, Get, Delete and Update users
+- ✅ Realtime notifications when a user is added or deleted (`SignalR`)
+- ✅ Events published over RabbitMQ (`UserCreatedEvent`, `UserDeletedEvent`, `UserUpdateEvent`)
+- ✅ RESTful endpoints with Swagger UI
+- ✅ Structured logging using Serilog
+- ✅ Fully dockerized stack with PostgreSQL + RabbitMQ
+
+---
+
+## 🐳 How to Run with Docker
+
+Make sure Docker is installed and running on your machine.
+
+### 🛠 Build & Run
 ```bash
-git clone https://github.com/your-name/dotnet-realtime-user-service.git
-cd dotnet-realtime-user-service/UserApi
-code .
+  docker-compose up --build
 ```
 
-### 2. Run PostgreSQL & RabbitMQ with Docker
+- API: `http://localhost:5000`
+- Swagger UI: `http://localhost:5000/swagger`
+- RabbitMQ UI: `http://localhost:15672` (`guest` / `guest`)
+- PostgreSQL: running on `localhost:5432`
+
+### 🔁 Tear Down
 ```bash
-docker compose up -d
+  docker-compose down
 ```
-
-RabbitMQ UI available at: [http://localhost:15672](http://localhost:15672)  
-Login: `guest` / `guest`
 
 ---
 
-## 🛠️ Development
+## 🖥️ How to Run Locally in VSCode
 
-### Run the API
+### 1. Clone the repo
 ```bash
-dotnet run
+  git clone https://github.com/your-username/realtime-user-service.git
+  cd realtime-user-service
 ```
 
-Swagger available at: [http://localhost:5077/swagger](http://localhost:5077/swagger)
+### 2. Set up the database
+Make sure PostgreSQL is running (use Docker or install locally). Update your \`appsettings.json\` or environment variable:
 
-### Run from Docker (fully containerized)
+```
+json
+"ConnectionStrings": {
+"DefaultConnection": "Host=localhost;Database=userdb;Username=postgres;Password=postgres"
+}
+```
+
+### 3. Run the app
 ```bash
-docker compose up --build
+  dotnet run --project UserApi
 ```
 
-Swagger will now be at: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+### 4. Access it
+- Swagger: [http://localhost:5000/swagger](http://localhost:5000/swagger)
 
 ---
 
-## 💬 Real-time HTML Client (SignalR)
+## 🔌 Realtime with SignalR
 
-### Steps:
-1. Open `test.html` in VS Code
-2. Right-click → **Open with Live Server**
-3. Go to [http://127.0.0.1:5500/test.html](http://127.0.0.1:5500/test.html)
-4. POST a user via Swagger → You’ll see real-time updates
+- SignalR is hosted at: `/hubs/user`
+- When a user is added or deleted, a message like `"UserAdded"` or `"UserDeleted"` is broadcast to all connected clients.
 
----
+### Frontend Example
+```js
+const connection = new signalR.HubConnectionBuilder()
+.withUrl("http://localhost:5000/hubs/user")
+.build();
 
-## 📨 RabbitMQ + MassTransit
+connection.on("UserAdded", user => {
+console.log("New user added:", user);
+});
 
-- Every time a user is created, a `UserCreatedEvent` is published.
-- MassTransit consumes this event and processes it in the background.
-- Consumer logs the event to the console.
-
----
-
-## 📊 Logging with Serilog
-
-- Logs are structured and output to the console
-- Great for debugging and Docker logging
-
----
-
-## ✅ Project Structure
-
+await connection.start();
 ```
-UserApi/
-├── Controllers/
-├── Consumers/
-├── Events/
-├── Hubs/
-├── Models/
-├── Data/
-├── Program.cs
-├── test.html
-├── Dockerfile
-├── docker-compose.yml
+
+---
+
+## 📬 Events and Messaging (RabbitMQ)
+
+- On user creation/deletion, events (\`UserCreatedEvent\`, \`UserDeletedEvent\`) are **published to RabbitMQ**
+- \`UserCreatedEventConsumer\` processes the message in background
+
+---
+
+## 🧪 Running Tests
+
+Tests are written using \`xUnit\` + \`Moq\`. To run them:
+
+``` bash
+    cd UserApi.Tests
+    dotnet test
 ```
+
+---
+
+## 🔒 Security Notes
+
+- No authentication is added (this is a demo project).
+- CORS is enabled for testing: \`http://127.0.0.1:5500\`
+
+---
+
+## 📬 Endpoints Summary
+
+| Method | Route            | Description         |
+|--------|------------------|---------------------|
+| GET    | \`/api/user\`      | Get all users       |
+| GET    | \`/api/user/{id}\` | Get user by ID      |
+| POST   | \`/api/user\`      | Create a new user   |
+| DELETE | \`/api/user/{id}\` | Delete a user       |
+
+---
+
+## 👨‍💻 Author
+
+- Created by **Nikolas** for a backend & DevOps interview challenge.
+- Designed to show clean architecture, real-time communication, and event-driven design using .NET.

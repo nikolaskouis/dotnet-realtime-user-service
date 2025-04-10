@@ -5,5 +5,7 @@ namespace UserApi.Hubs;
 
 public class UserHub : Hub
 {
-    // empty, will add later
+    // No need to add anything.
+    // If client was going to cal something on server
+    // then add here, sendmessage or something similar.
 }
